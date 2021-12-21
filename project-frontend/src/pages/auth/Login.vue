@@ -1,8 +1,8 @@
 <template>
   <div>
     <h2 class="mt-3">Here You can sign in to Your profile</h2>
-    <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
-      <b-form @submit.prevent="handleSubmit(onLogin)">
+    <ValidationObserver ref="login_observer" v-slot="{ handleSubmit }">
+      <b-form @submit.prevent="sendToBack">
         <ValidationProvider rules="required|email" name="Email" v-slot="{ valid, errors }">
           <b-form-group>
             <b-form-input
@@ -32,7 +32,7 @@
           </b-form-group>
         </ValidationProvider>
 
-        <b-button @click="sendToBack" type="submit" variant="primary">Login</b-button>
+        <b-button type="submit" variant="primary">Login</b-button>
       </b-form>
     </ValidationObserver>
   </div>
@@ -57,19 +57,17 @@ export default {
   }),
   methods: {
     sendToBack() {
-      return new Promise((resolve, reject) => {
-        axios.post('/auth/login', this.form)
-          .then((result) => {
-            console.log(result)
-          })
-          .catch(error => {
-            console.log(error)
-          })
-      })
+      this.$store.dispatch('LOGIN_USER', this.form)
+        .then(res => {
+          if(res){
+            this.$router.push({name: 'Profile'})
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
-    onLogin() {
-      console.log("Form submitted yay!");
-    },
+
   }
 };
 </script>

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller
@@ -41,17 +44,32 @@ class AuthController extends Controller
     }
     public function register(Request $request)
     {
+        $ver_token = Str::random(128);
         $user = [
             "name" => $request->get('name'),
             "email" => $request->get('email'),
             "age" => $request->get('email'),
             "address" => $request->get('address'),
-            "password" => Hash::make($request->get('password'))
+            "password" => Hash::make($request->get('password')),
+            "verification_token" => $ver_token
         ];
 
-        User::create($user);
-
-        return response()->json(['message' => 'done']);
+        $newUser = User::query()->create($user);
+        if ($newUser) {
+            $this->emailVerification($newUser, $ver_token);
+            return response()->json(['message' => 'User registered']);
+        }
+        return response()->json(['message' => 'Something is wrong']);
+    }
+    /**
+     * @param User $user
+     * @param $token
+     */
+    public function emailVerification(User $user, $token)
+    {
+        Mail::send('mail.verify', ['user' => $user, 'token' => $token], function ($m) use ($user) {
+            $m->to($user->email, $user->name)->subject('Please Verify your Email');
+        });
     }
 
     /**
@@ -61,7 +79,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json($this->guard()->user());
+        return response()->json([ auth()->user()]);
     }
 
     /**

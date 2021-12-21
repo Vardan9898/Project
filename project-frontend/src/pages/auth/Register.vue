@@ -91,6 +91,7 @@
 import axios from "axios";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 
+
 export default {
   name: "BootstrapForm",
   components: {
@@ -107,16 +108,25 @@ export default {
     }
   }),
   methods: {
-    RegisterUser() {
-      return new Promise((resolve, reject) => {
-        axios.post('/auth/register', this.form)
-          .then((res) => {
-            console.log(res)
-          })
-          .catch(error => {
-            console.log(error)
-          })
+     RegisterUser() {
+
+      // return new Promise((resolve, reject) => {
+      //   axios.post('/auth/register', this.form)
+      //     .then((res) => {
+      //       console.log(res)
+      //     })
+      //     .catch(error => {
+      //       console.log(error)
+      //     })
+      // })
+      this.$store.dispatch('REGISTER_USER', this.form)
+      .then(res => {
+        if (res){
+          alert(res.message)
+          this.$router.push({name: "Login"})
+        }
       })
+      .catch(error => {console.log(error)})
     },
   }
 };
