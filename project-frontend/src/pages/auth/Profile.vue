@@ -10,15 +10,15 @@
       <div class="profile-data" v-if="user[0]">
         <h1 class="user-name">{{user[0].name}}</h1>
         <div class="user-age">
-          <img src="https://cdn-icons-png.flaticon.com/512/6443/6443358.png" alt="user age">
+          <img src="@/assets/worldwide.png" alt="user age">
           <p>{{user[0].age}}</p>
         </div>
         <div class="user-email">
-          <img src="https://cdn-icons.flaticon.com/png/512/3178/premium/3178283.png?token=exp=1640455137~hmac=5258c24ff655e53562949088cb5e687c" alt="user email">
+          <img src="@/assets/email.png" alt="user email">
           <p>{{user[0].email}}</p>
         </div>
         <div class="user-address">
-          <img src="https://cdn-icons.flaticon.com/png/512/1433/premium/1433265.png?token=exp=1640509150~hmac=d68a0a5e043b2214174259362c5114de" alt="user address">
+          <img src="@/assets/address.png" alt="user address">
           <p>{{user[0].address}}</p>
         </div>
         <b-button class="mt-2" @click="GoToUsers" href="#" variant="outline-success" block><span class="show-all-users">All Users</span></b-button>
