@@ -27,6 +27,9 @@ export default {
   methods: {
     showParams() {
       this.email = this.$route.query.email
+      if (this.email){
+        this.$store.dispatch('VERIFIED_EMAIL', this.email)
+      }
     },
     GoToLogin(){
       this.$router.push({name : "Login"});

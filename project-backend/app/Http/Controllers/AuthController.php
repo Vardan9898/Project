@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Resources\UserResource;
+use App\Models\File;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,30 +35,39 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
-
+        $credentials = $request->only('email', 'password', 'email_verified_status');
         if ($token = auth()->attempt($credentials)) {
             return $this->respondWithToken($token);
         }
-
         return response()->json(['error' => 'Unauthorized'], 401);
     }
+
     public function register(Request $request)
     {
         $ver_token = Str::random(128);
         $user = [
             "name" => $request->get('name'),
             "email" => $request->get('email'),
-            "age" => $request->get('email'),
+            "age" => $request->get('age'),
             "address" => $request->get('address'),
             "password" => Hash::make($request->get('password')),
+            "image" => $request->get('image'),
             "verification_token" => $ver_token
         ];
 
         $newUser = User::query()->create($user);
         if ($newUser) {
             $this->emailVerification($newUser, $ver_token);
-            return response()->json(['message' => 'User registered']);
+
+//            $data = $request;
+//            $photos = File::create($data);
+//
+//            $imagePath = $data['image']->store('profile_images');
+//
+//            $photos->img_path = $imagePath;
+//            $photos->save();
+
+            return response()->json(['message' => 'Please check Your email']);
         }
         return response()->json(['message' => 'Something is wrong']);
     }
@@ -71,6 +81,16 @@ class AuthController extends Controller
             $m->to($user->email, $user->name)->subject('Please Verify your Email');
         });
     }
+    public function verify(){
+            $email_status = [
+                'email_verified_status' => 'active'
+            ];
+            $ver_token = [
+                'verification_token' => null
+            ];
+            User::query()->update($email_status);
+            User::query()->update($ver_token);
+    }
 
     /**
      * Get the authenticated User
@@ -80,6 +100,10 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json([ auth()->user()]);
+    }
+    public function all_users()
+    {
+        return response()->json([ auth()->user()->all()]);
     }
 
     /**
@@ -93,6 +117,8 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Successfully logged out']);
     }
+
+
 
     /**
      * Refresh a token.

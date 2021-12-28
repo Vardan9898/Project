@@ -25,11 +25,12 @@ Route::group([
     Route::post('refresh', [AuthController::class, 'refresh'])->name('auth.refresh');
     Route::post('me', [AuthController::class, 'me'])->name('auth.me');
     Route::post('register', [AuthController::class, 'register'])->name('auth.register');
+    Route::post('all_users', [AuthController::class, 'all_users'])->name('auth.all_users');
+    Route::post('verify', [AuthController::class, 'verify'])->name('auth.verify');
 
 });
 
-Route::get('/test/data', function(Request $request) {
-    return response()->json(['data' => 'ekav backic']);
-})->name('auth.me');
+
+
 
 

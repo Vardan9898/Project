@@ -1,5 +1,6 @@
 <template>
-  <div class="mt-5">
+  <div class="register-body">
+  <div class="mt-5 register-form">
     <h2>Please Register</h2>
     <ValidationObserver ref="observer" v-slot="{ handleSubmit }">
       <b-form @submit.prevent="handleSubmit(RegisterUser)">
@@ -79,11 +80,14 @@
           </b-form-group>
         </ValidationProvider>
 
+<!--       <b-form-file v-model="form.image" class="mt-3" plain></b-form-file>-->
 
 
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <b-button block type="submit" variant="primary">Submit</b-button>
+        <b-button @click="GoToLogin" block variant="success">Go to Login</b-button>
       </b-form>
     </ValidationObserver>
+  </div>
   </div>
 </template>
 
@@ -104,21 +108,12 @@ export default {
         email: "",
         password: "",
         age: "",
-        address: ""
+        address: "",
+        image: ""
     }
   }),
   methods: {
      RegisterUser() {
-
-      // return new Promise((resolve, reject) => {
-      //   axios.post('/auth/register', this.form)
-      //     .then((res) => {
-      //       console.log(res)
-      //     })
-      //     .catch(error => {
-      //       console.log(error)
-      //     })
-      // })
       this.$store.dispatch('REGISTER_USER', this.form)
       .then(res => {
         if (res){
@@ -128,10 +123,32 @@ export default {
       })
       .catch(error => {console.log(error)})
     },
+    GoToLogin(){
+       this.$router.push('Login')
+    }
   }
-};
+}
 </script>
 
 <style scoped>
+
+.register-body{
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle, rgba(0,255,187,1) 0%, rgba(35,169,177,1) 50%, rgba(0,212,255,0.8802871490393032) 100%);
+}
+.register-form{
+  max-width: 600px;
+  width: 100%;
+  padding: 25px;
+  background-color: white;
+  box-shadow: 0px 10px 13px -7px #000000, 5px 5px 7px 6px rgba(0,0,0,0);
+  border-radius: 10px;
+}
 
 </style>

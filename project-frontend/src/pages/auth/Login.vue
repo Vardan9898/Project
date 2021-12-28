@@ -1,8 +1,9 @@
 <template>
-  <div>
-    <h2 class="mt-3">Here You can sign in to Your profile</h2>
+  <div class="login-body">
+  <div class="login-form">
+    <h2 class="mt-3">Sign In</h2>
     <ValidationObserver ref="login_observer" v-slot="{ handleSubmit }">
-      <b-form @submit.prevent="sendToBack">
+      <b-form @submit.prevent="LoginUser">
         <ValidationProvider rules="required|email" name="Email" v-slot="{ valid, errors }">
           <b-form-group>
             <b-form-input
@@ -32,9 +33,11 @@
           </b-form-group>
         </ValidationProvider>
 
-        <b-button type="submit" variant="primary">Login</b-button>
+        <b-button block type="submit" variant="primary">Login</b-button>
+        <b-button @click="GoToRegister" block variant="success">Create account</b-button>
       </b-form>
     </ValidationObserver>
+  </div>
   </div>
 </template>
 
@@ -52,26 +55,47 @@ export default {
     form:{
       email: "",
       password: "",
+      email_verified_status: "active"
     },
 
   }),
   methods: {
-    sendToBack() {
+    LoginUser() {
       this.$store.dispatch('LOGIN_USER', this.form)
         .then(res => {
           if(res){
-            this.$router.push({name: 'Profile'})
+            //this.$router.push({name: 'Profile'})
           }
         })
         .catch(error => {
           console.log(error)
         })
     },
+    GoToRegister(){
+      this.$router.push({name: 'Register'})
+    }
+  },
 
-  }
 };
 </script>
 
 <style scoped>
-
+.login-body{
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle, rgba(0,255,187,1) 0%, rgba(35,169,177,1) 50%, rgba(0,212,255,0.8802871490393032) 100%);
+}
+.login-form{
+  max-width: 600px;
+  width: 100%;
+  padding: 25px;
+  background-color: white;
+  box-shadow: 0px 10px 13px -7px #000000, 5px 5px 7px 6px rgba(0,0,0,0);
+  border-radius: 10px;
+}
 </style>
